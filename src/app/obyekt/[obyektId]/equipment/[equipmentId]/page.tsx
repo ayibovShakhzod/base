@@ -8,7 +8,6 @@ type Props = {
     obyektId: string
     equipmentId: string
   }
-  children: React.ReactNode
 }
 
 const EquipmentPage = ({ params }: Props) => {
