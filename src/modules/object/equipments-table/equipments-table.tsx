@@ -34,7 +34,7 @@ import {
 } from "shared/ui"
 import { useRouter } from "next/navigation"
 
-const data: IObyekt[] = [
+const data: IEquipment[] = [
   {
     id: "m5gr84i9",
     name: "Kamera",
@@ -62,13 +62,13 @@ const data: IObyekt[] = [
   },
 ]
 
-export type IObyekt = {
+export type IEquipment = {
   id: string
   name: string
   count: number
 }
 
-export const columns: ColumnDef<IObyekt>[] = [
+export const columns: ColumnDef<IEquipment>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -131,7 +131,7 @@ export function EquipmentsTable({ params }: IEquipmentsTable) {
     },
   })
 
-  const onDoubleClickRow = (row: Row<IObyekt>) => {
+  const onDoubleClickRow = (row: Row<IEquipment>) => {
     router.push(`/obyekt/${params.obyektId}/equipment/${row.original.id}`)
   }
 

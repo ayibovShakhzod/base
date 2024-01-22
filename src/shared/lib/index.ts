@@ -1,1 +1,2 @@
-export * from "./lib"
+export * from "./cn"
+export * from "./useCopyToClipboard"

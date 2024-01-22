@@ -1,6 +1,7 @@
 "use client"
 
-import * as React from "react"
+import React, { useState } from "react"
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -54,6 +55,9 @@ import {
   TableRow,
 } from "shared/ui"
 import { useRouter } from "next/navigation"
+import { AddEditModal } from "../../object/add-edit-modal"
+import { useCopyToClipboard } from "shared/lib"
+import { DeleteModal } from "modules/object/delete-modal"
 
 const data: IObyekt[] = [
   {
@@ -242,12 +246,42 @@ export const columns: ColumnDef<IObyekt>[] = [
   // },
 ]
 
-export function DataTableDemo() {
+export const DataTableDemo = () => {
   const router = useRouter()
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
+
+  const [copiedText, copy] = useCopyToClipboard()
+  const [showAddEditModal, setShowAddEditModal] = useState(false)
+  const [selectedObyekt, setSelectedObyekt] = useState<IObyekt | null>(null)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+  const onClickAdd = () => {
+    setSelectedObyekt(null)
+    setShowAddEditModal(true)
+  }
+
+  const onClickEdit = (obyekt: IObyekt) => {
+    setSelectedObyekt(obyekt)
+    setShowAddEditModal(true)
+  }
+
+  const onClickDelete = (obyekt: IObyekt) => {
+    setSelectedObyekt(obyekt)
+    setShowDeleteModal(true)
+  }
+
+  const onCloseDeleteModal = () => {
+    setShowDeleteModal(false)
+    setSelectedObyekt(null)
+  }
+
+  const onCloseAddEditModal = () => {
+    setShowAddEditModal(false)
+    setSelectedObyekt(null)
+  }
 
   const table = useReactTable({
     data,
@@ -273,91 +307,97 @@ export function DataTableDemo() {
   }
 
   return (
-    <div className="w-full">
-      <Button variant="default" className="flex fixed bottom-6 right-6 rounded-full p-2 z-50 h-[40px]" size="sm">
-        <PlusCircle size="24" />
-      </Button>
-      <Card className="p-4 flex flex-col gap-4">
-        <div className="flex items-center gap-20 justify-between w-full">
-          <div className="flex gap-4 w-full">
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Respublika" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="0">Hammasi</SelectItem>
-                  <SelectItem value="1">Toshkent sh</SelectItem>
-                  <SelectItem value="2">Namangan viloyati</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Tuman" className="text-left" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="0">Hammasi</SelectItem>
-                  <SelectItem value="1.1">Olmazor tumani</SelectItem>
-                  <SelectItem value="1.2">Bektemir tumani</SelectItem>
-                  <SelectItem value="1.3">Mirobod tumani</SelectItem>
-                  <SelectItem value="1.4">Mirzo-Ulug`bek tumani</SelectItem>
-                  <SelectItem value="1.5">Sergeli tumani</SelectItem>
-                  <SelectItem value="1.6">Chilonzor tumani</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Obyekt tasnifi" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">Ijtimoyi</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Barcha turdagi obyektlar" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">Maktab</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Loyiha nomini tanlang" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="0">Lorem</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Buyurtma raqamni tanlang" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="0">Lorem</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex gap-5 justify-end">
-            <Input
-              placeholder="Ismi bo`yicha qidirish..."
-              value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-              onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
-              className="w-full min-w-[280px] border-primary placeholder:italic"
-            />
+    <>
+      <div className="w-full">
+        <Button
+          variant="default"
+          className="flex fixed bottom-6 right-6 rounded-full p-2 z-50 h-[40px]"
+          size="sm"
+          onClick={onClickAdd}
+        >
+          <PlusCircle size="24" />
+        </Button>
+        <Card className="p-4 flex flex-col gap-4">
+          <div className="flex items-center gap-20 justify-between w-full">
+            <div className="flex gap-4 w-full">
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Respublika" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="0">Hammasi</SelectItem>
+                    <SelectItem value="1">Toshkent sh</SelectItem>
+                    <SelectItem value="2">Namangan viloyati</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Tuman" className="text-left" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="0">Hammasi</SelectItem>
+                    <SelectItem value="1.1">Olmazor tumani</SelectItem>
+                    <SelectItem value="1.2">Bektemir tumani</SelectItem>
+                    <SelectItem value="1.3">Mirobod tumani</SelectItem>
+                    <SelectItem value="1.4">Mirzo-Ulug`bek tumani</SelectItem>
+                    <SelectItem value="1.5">Sergeli tumani</SelectItem>
+                    <SelectItem value="1.6">Chilonzor tumani</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Obyekt tasnifi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="1">Ijtimoyi</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Barcha turdagi obyektlar" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="1">Maktab</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Loyiha nomini tanlang" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="0">Lorem</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Buyurtma raqamni tanlang" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="0">Lorem</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-5 justify-end">
+              <Input
+                placeholder="Ismi bo`yicha qidirish..."
+                value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+                onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
+                className="w-full min-w-[280px] border-primary placeholder:italic"
+              />
 
-            {/* <DropdownMenu>
+              {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='outline' className=''>
                   Columns <ChevronDown className='ml-2 h-4 w-4' />
@@ -383,91 +423,99 @@ export function DataTableDemo() {
                   })}
               </DropdownMenuContent>
             </DropdownMenu> */}
+            </div>
           </div>
-        </div>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <ContextMenu key={row.id}>
-                    <ContextMenuTrigger className="w-full" asChild>
-                      <TableRow
-                        data-state={row.getIsSelected() && "selected"}
-                        onDoubleClick={() => onDoubleClickRow(row)}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent className="w-64">
-                      <ContextMenuItem inset onClick={() => onDoubleClickRow(row)}>
-                        Open
-                      </ContextMenuItem>
-                      <ContextMenuSeparator />
-                      <ContextMenuItem inset disabled>
-                        Copy lat and long
-                      </ContextMenuItem>
-                      <ContextMenuSeparator />
-                      <ContextMenuItem inset disabled>
-                        Edit
-                      </ContextMenuItem>
-                      <ContextMenuItem inset disabled>
-                        Delete
-                      </ContextMenuItem>
-                      <ContextMenuSeparator />
-                      <ContextMenuItem inset disabled>
-                        Open {row.original.updated_by} profile
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredRowModel().rows.length} ta qatordan {table.getFilteredSelectedRowModel().rows.length} tasi
-            tanlandi
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                        </TableHead>
+                      )
+                    })}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <ContextMenu key={row.id}>
+                      <ContextMenuTrigger className="w-full" asChild>
+                        <TableRow
+                          data-state={row.getIsSelected() && "selected"}
+                          onDoubleClick={() => onDoubleClickRow(row)}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent className="w-64">
+                        <ContextMenuItem inset onClick={() => onDoubleClickRow(row)}>
+                          Open
+                        </ContextMenuItem>
+                        <ContextMenuSeparator />
+                        <ContextMenuItem inset onClick={() => copy(`${row.original.lat}, ${row.original.long}`)}>
+                          Copy lat and long
+                        </ContextMenuItem>
+                        <ContextMenuSeparator />
+                        <ContextMenuItem inset onClick={() => onClickEdit(row.original)}>
+                          Edit
+                        </ContextMenuItem>
+                        <ContextMenuItem inset onClick={() => onClickDelete(row.original)}>
+                          Delete
+                        </ContextMenuItem>
+                        <ContextMenuSeparator />
+                        <ContextMenuItem inset disabled>
+                          Open {row.original.updated_by} profile
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-              Next
-            </Button>
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex-1 text-sm text-muted-foreground">
+              {table.getFilteredRowModel().rows.length} ta qatordan {table.getFilteredSelectedRowModel().rows.length}{" "}
+              tasi tanlandi
+            </div>
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                Previous
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                Next
+              </Button>
+            </div>
           </div>
-        </div>
-      </Card>
-    </div>
+        </Card>
+      </div>
+
+      {showAddEditModal && (
+        <AddEditModal obyekt={selectedObyekt} onClose={onCloseAddEditModal} open={showAddEditModal} />
+      )}
+      {showDeleteModal && <DeleteModal obyekt={selectedObyekt} onClose={onCloseDeleteModal} open={showDeleteModal} />}
+    </>
   )
 }
