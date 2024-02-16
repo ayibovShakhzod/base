@@ -15,6 +15,9 @@ import {
   FormMessage,
   Input,
 } from "shared/ui"
+import { api, useAuthed } from "shared/api"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -24,6 +27,9 @@ const formSchema = z.object({
 })
 
 const LoginPage = () => {
+  const authed = useAuthed()
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,18 +42,31 @@ const LoginPage = () => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await api.auth.authorize({
+      username: values.username,
+      password: values.password,
+    })
   }
+
+  useEffect(() => {
+    if (authed) {
+      router.push("/")
+    }
+  }, [authed])
 
   return (
     <div className="flex items-center justify-center w-full h-dvh">
       <Card className="px-10 py-7 w-2/6">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center mb-2">DB</h1>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              form.handleSubmit(onSubmit)()
+            }}
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
               name="username"

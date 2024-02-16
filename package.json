@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "tsc && prettier --write ./src"
+    "format": "tsc && prettier --write ./src",
+    "gen:api": "openapi-generator-cli generate -i http://213.230.71.173:59123/api-docs/v1 -g typescript-fetch -t ./node_modules/openapi-generator-typescript-fetch-swr/template -o ./generated-api --additional-properties useSingleRequestParameter=false --additional-properties enumPropertyNaming=original --additional-properties=typescriptThreePlus=true && rm -rf src/shared/api/back/_generated && mv ./generated-api src/shared/api/back/_generated && git add src/shared/api/back/_generated && prettier --write src/shared/api"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "@next/bundle-analyzer": "^14.0.4",
+    "@openapitools/openapi-generator-cli": "^2.9.0",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-context-menu": "^2.1.5",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -27,11 +29,13 @@
     "clsx": "^2.1.0",
     "lucide-react": "^0.307.0",
     "next": "14.0.4",
+    "openapi-generator-typescript-fetch-swr": "github:yoldi/openapi-generator-typescript-fetch-swr",
     "prettier": "^3.2.4",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.49.2",
     "sass": "^1.69.7",
+    "swr": "^2.2.5",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
