@@ -15,7 +15,7 @@ import {
   FormMessage,
   Input,
 } from "shared/ui"
-import { api, useAuthed } from "shared/api"
+import { api, setApiKey, useAuthed } from "shared/api"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
@@ -47,6 +47,8 @@ const LoginPage = () => {
       username: values.username,
       password: values.password,
     })
+
+    setApiKey("token")
   }
 
   useEffect(() => {
