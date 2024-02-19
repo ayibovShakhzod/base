@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!authed) {
-      router.push("/login")
+      // router.push("/login")
     }
   })
 
