@@ -19,15 +19,12 @@ import { LogOut, MonitorSmartphone, Moon, Sun, SunMoon, User } from "lucide-reac
 import { logout } from "shared/api"
 
 export const UserAvatar = () => {
-
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar>
-            <AvatarFallback>
-              RA
-            </AvatarFallback>
+            <AvatarFallback>RA</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">

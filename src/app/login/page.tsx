@@ -48,7 +48,6 @@ const LoginPage = () => {
       username: values.username,
       password: values.password,
     })
-
   }
 
   useEffect(() => {
