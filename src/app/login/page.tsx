@@ -43,12 +43,12 @@ const LoginPage = () => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setApiKey("token")
     await api.auth.authorize({
       username: values.username,
       password: values.password,
     })
 
-    setApiKey("token")
   }
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const LoginPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter password" {...field} />
+                    <Input placeholder="Enter password" {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
