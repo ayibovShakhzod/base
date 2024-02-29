@@ -29,6 +29,18 @@ export interface DeleteObyektRequest {
     id: number;
 }
 
+export interface GetAllByFilterRequest {
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+    regionId?: number;
+    districtId?: number;
+    objectTasnifiId?: number;
+    objectTasnifiTuriId?: number;
+    loyihaId?: number;
+    buyurtmaRaqamId?: number;
+}
+
 export interface GetAllObyektsRequest {
     page?: number;
     size?: number;
@@ -67,6 +79,14 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/obyekts`,
             method: 'POST',
@@ -111,6 +131,14 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/obyekts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +172,100 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByFilterRequestOpts = (requestParameters: GetAllByFilterRequest): runtime.RequestOpts => {
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        if (requestParameters.regionId !== undefined) {
+            queryParameters['regionId'] = requestParameters.regionId;
+        }
+
+        if (requestParameters.districtId !== undefined) {
+            queryParameters['districtId'] = requestParameters.districtId;
+        }
+
+        if (requestParameters.objectTasnifiId !== undefined) {
+            queryParameters['objectTasnifiId'] = requestParameters.objectTasnifiId;
+        }
+
+        if (requestParameters.objectTasnifiTuriId !== undefined) {
+            queryParameters['objectTasnifiTuriId'] = requestParameters.objectTasnifiTuriId;
+        }
+
+        if (requestParameters.loyihaId !== undefined) {
+            queryParameters['loyihaId'] = requestParameters.loyihaId;
+        }
+
+        if (requestParameters.buyurtmaRaqamId !== undefined) {
+            queryParameters['buyurtmaRaqamId'] = requestParameters.buyurtmaRaqamId;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/obyekts/filter`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByFilterFetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<ObyektDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ObyektDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByFilterRaw = async (requestParameters: GetAllByFilterRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<ObyektDTO>>> => {
+        const context = this.getAllByFilterRequestOpts(requestParameters);
+        return this.getAllByFilterFetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByFilter = async (page?: number, size?: number, sort?: Array<string>, regionId?: number, districtId?: number, objectTasnifiId?: number, objectTasnifiTuriId?: number, loyihaId?: number, buyurtmaRaqamId?: number, initOverrides?: RequestInit): Promise<Array<ObyektDTO>> => {
+        const response = await this.getAllByFilterRaw({ page: page, size: size, sort: sort, regionId: regionId, districtId: districtId, objectTasnifiId: objectTasnifiId, objectTasnifiTuriId: objectTasnifiTuriId, loyihaId: loyihaId, buyurtmaRaqamId: buyurtmaRaqamId }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByFilter = (() => {
+        const key = (requestParameters: GetAllByFilterRequest = {}, config?: SWRConfiguration<Array<ObyektDTO>>) => this.getAllByFilterRequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByFilterFetch(context));
+        const fn = (requestParameters: GetAllByFilterRequest = {}, config?: SWRConfiguration<Array<ObyektDTO>>): SWRResponse<Array<ObyektDTO>> => {
+            return useSWR<Array<ObyektDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllObyektsRequestOpts = (requestParameters: GetAllObyektsRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +283,14 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/obyekts`,
             method: 'GET',
@@ -215,6 +345,14 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/obyekts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +413,14 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/obyekts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +471,14 @@ export class ObyektResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/obyekts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

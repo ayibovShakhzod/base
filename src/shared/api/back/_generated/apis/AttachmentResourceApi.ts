@@ -35,6 +35,13 @@ export interface GetAllAttachmentsRequest {
     sort?: Array<string>;
 }
 
+export interface GetAllByObyekt11Request {
+    obyektId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAttachmentRequest {
     id: number;
 }
@@ -67,6 +74,14 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/attachments`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/attachments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -161,6 +184,14 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/attachments`,
             method: 'GET',
@@ -206,6 +237,80 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByObyekt11RequestOpts = (requestParameters: GetAllByObyekt11Request): runtime.RequestOpts => {
+        if (requestParameters.obyektId === null || requestParameters.obyektId === undefined) {
+            throw new runtime.RequiredError('obyektId','Required parameter requestParameters.obyektId was null or undefined when calling getAllByObyekt11.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/attachments/obyekt/{obyektId}`.replace(`{${"obyektId"}}`, encodeURIComponent(String(requestParameters.obyektId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByObyekt11Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AttachmentDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AttachmentDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByObyekt11Raw = async (requestParameters: GetAllByObyekt11Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AttachmentDTO>>> => {
+        const context = this.getAllByObyekt11RequestOpts(requestParameters);
+        return this.getAllByObyekt11Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByObyekt11 = async (obyektId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<AttachmentDTO>> => {
+        const response = await this.getAllByObyekt11Raw({ obyektId: obyektId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByObyekt11 = (() => {
+        const key = (requestParameters: GetAllByObyekt11Request, config?: SWRConfiguration<Array<AttachmentDTO>>) => this.getAllByObyekt11RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByObyekt11Fetch(context));
+        const fn = (requestParameters: GetAllByObyekt11Request, config?: SWRConfiguration<Array<AttachmentDTO>>): SWRResponse<Array<AttachmentDTO>> => {
+            return useSWR<Array<AttachmentDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAttachmentRequestOpts = (requestParameters: GetAttachmentRequest): runtime.RequestOpts => {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getAttachment.');
@@ -215,6 +320,14 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/attachments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/attachments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class AttachmentResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/attachments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

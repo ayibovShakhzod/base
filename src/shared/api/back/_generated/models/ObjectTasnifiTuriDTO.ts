@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    DistrictDTO,
-    DistrictDTOFromJSON,
-    DistrictDTOFromJSONTyped,
-    DistrictDTOToJSON,
-} from './DistrictDTO';
-
 /**
  * Object tasnifi turi
  * @export
@@ -38,12 +31,6 @@ export interface ObjectTasnifiTuriDTO {
      * @memberof ObjectTasnifiTuriDTO
      */
     name: string;
-    /**
-     * 
-     * @type {DistrictDTO}
-     * @memberof ObjectTasnifiTuriDTO
-     */
-    district?: DistrictDTO;
 }
 
 
@@ -59,7 +46,6 @@ export function ObjectTasnifiTuriDTOFromJSONTyped(json: any, ignoreDiscriminator
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': json['name'],
-        'district': !exists(json, 'district') ? undefined : DistrictDTOFromJSON(json['district']),
     };
 }
 
@@ -74,7 +60,6 @@ export function ObjectTasnifiTuriDTOToJSON(value?: ObjectTasnifiTuriDTO | null):
         
         'id': value.id,
         'name': value.name,
-        'district': DistrictDTOToJSON(value.district),
     };
 }
 

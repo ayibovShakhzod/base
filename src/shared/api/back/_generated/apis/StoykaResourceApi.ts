@@ -29,6 +29,13 @@ export interface DeleteStoykaRequest {
     id: number;
 }
 
+export interface GetAllByTypeRequest {
+    typeId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAllStoykasRequest {
     page?: number;
     size?: number;
@@ -67,6 +74,14 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/stoykas`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/stoykas/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +167,80 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByTypeRequestOpts = (requestParameters: GetAllByTypeRequest): runtime.RequestOpts => {
+        if (requestParameters.typeId === null || requestParameters.typeId === undefined) {
+            throw new runtime.RequiredError('typeId','Required parameter requestParameters.typeId was null or undefined when calling getAllByType.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/stoykas/type/{typeId}`.replace(`{${"typeId"}}`, encodeURIComponent(String(requestParameters.typeId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByTypeFetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StoykaDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StoykaDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByTypeRaw = async (requestParameters: GetAllByTypeRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StoykaDTO>>> => {
+        const context = this.getAllByTypeRequestOpts(requestParameters);
+        return this.getAllByTypeFetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByType = async (typeId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<StoykaDTO>> => {
+        const response = await this.getAllByTypeRaw({ typeId: typeId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByType = (() => {
+        const key = (requestParameters: GetAllByTypeRequest, config?: SWRConfiguration<Array<StoykaDTO>>) => this.getAllByTypeRequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByTypeFetch(context));
+        const fn = (requestParameters: GetAllByTypeRequest, config?: SWRConfiguration<Array<StoykaDTO>>): SWRResponse<Array<StoykaDTO>> => {
+            return useSWR<Array<StoykaDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllStoykasRequestOpts = (requestParameters: GetAllStoykasRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +258,14 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/stoykas`,
             method: 'GET',
@@ -215,6 +320,14 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/stoykas/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/stoykas/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class StoykaResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/stoykas/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

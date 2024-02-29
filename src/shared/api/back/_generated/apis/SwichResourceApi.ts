@@ -35,6 +35,13 @@ export interface GetAllSwichesRequest {
     sort?: Array<string>;
 }
 
+export interface GetAllSwiches1Request {
+    typeId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetSwichRequest {
     id: number;
 }
@@ -67,6 +74,14 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/swiches`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/swiches/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -161,6 +184,14 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/swiches`,
             method: 'GET',
@@ -206,6 +237,80 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllSwiches1RequestOpts = (requestParameters: GetAllSwiches1Request): runtime.RequestOpts => {
+        if (requestParameters.typeId === null || requestParameters.typeId === undefined) {
+            throw new runtime.RequiredError('typeId','Required parameter requestParameters.typeId was null or undefined when calling getAllSwiches1.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/swiches/type/{typeId}`.replace(`{${"typeId"}}`, encodeURIComponent(String(requestParameters.typeId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllSwiches1Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<SwichDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SwichDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllSwiches1Raw = async (requestParameters: GetAllSwiches1Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<SwichDTO>>> => {
+        const context = this.getAllSwiches1RequestOpts(requestParameters);
+        return this.getAllSwiches1Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllSwiches1 = async (typeId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<SwichDTO>> => {
+        const response = await this.getAllSwiches1Raw({ typeId: typeId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllSwiches1 = (() => {
+        const key = (requestParameters: GetAllSwiches1Request, config?: SWRConfiguration<Array<SwichDTO>>) => this.getAllSwiches1RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllSwiches1Fetch(context));
+        const fn = (requestParameters: GetAllSwiches1Request, config?: SWRConfiguration<Array<SwichDTO>>): SWRResponse<Array<SwichDTO>> => {
+            return useSWR<Array<SwichDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getSwichRequestOpts = (requestParameters: GetSwichRequest): runtime.RequestOpts => {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getSwich.');
@@ -215,6 +320,14 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/swiches/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/swiches/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class SwichResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/swiches/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

@@ -29,6 +29,13 @@ export interface DeleteObjectTasnifiRequest {
     id: number;
 }
 
+export interface GetAllByType3Request {
+    typeId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAllObjectTasnifisRequest {
     page?: number;
     size?: number;
@@ -67,6 +74,14 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/object-tasnifis`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/object-tasnifis/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +167,80 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByType3RequestOpts = (requestParameters: GetAllByType3Request): runtime.RequestOpts => {
+        if (requestParameters.typeId === null || requestParameters.typeId === undefined) {
+            throw new runtime.RequiredError('typeId','Required parameter requestParameters.typeId was null or undefined when calling getAllByType3.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/object-tasnifis/type/{typeId}`.replace(`{${"typeId"}}`, encodeURIComponent(String(requestParameters.typeId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByType3Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<ObjectTasnifiDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ObjectTasnifiDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByType3Raw = async (requestParameters: GetAllByType3Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<ObjectTasnifiDTO>>> => {
+        const context = this.getAllByType3RequestOpts(requestParameters);
+        return this.getAllByType3Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByType3 = async (typeId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<ObjectTasnifiDTO>> => {
+        const response = await this.getAllByType3Raw({ typeId: typeId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByType3 = (() => {
+        const key = (requestParameters: GetAllByType3Request, config?: SWRConfiguration<Array<ObjectTasnifiDTO>>) => this.getAllByType3RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByType3Fetch(context));
+        const fn = (requestParameters: GetAllByType3Request, config?: SWRConfiguration<Array<ObjectTasnifiDTO>>): SWRResponse<Array<ObjectTasnifiDTO>> => {
+            return useSWR<Array<ObjectTasnifiDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllObjectTasnifisRequestOpts = (requestParameters: GetAllObjectTasnifisRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +258,14 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/object-tasnifis`,
             method: 'GET',
@@ -215,6 +320,14 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/object-tasnifis/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/object-tasnifis/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class ObjectTasnifiResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/object-tasnifis/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

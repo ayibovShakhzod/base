@@ -29,6 +29,13 @@ export interface DeleteCabelTypeRequest {
     id: number;
 }
 
+export interface GetAllByObyekt9Request {
+    obyektId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAllCabelTypesRequest {
     page?: number;
     size?: number;
@@ -67,6 +74,14 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/cabel-types`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/cabel-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +167,80 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByObyekt9RequestOpts = (requestParameters: GetAllByObyekt9Request): runtime.RequestOpts => {
+        if (requestParameters.obyektId === null || requestParameters.obyektId === undefined) {
+            throw new runtime.RequiredError('obyektId','Required parameter requestParameters.obyektId was null or undefined when calling getAllByObyekt9.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/cabel-types/obyekt/{obyektId}`.replace(`{${"obyektId"}}`, encodeURIComponent(String(requestParameters.obyektId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByObyekt9Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CabelTypeDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CabelTypeDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByObyekt9Raw = async (requestParameters: GetAllByObyekt9Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CabelTypeDTO>>> => {
+        const context = this.getAllByObyekt9RequestOpts(requestParameters);
+        return this.getAllByObyekt9Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByObyekt9 = async (obyektId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<CabelTypeDTO>> => {
+        const response = await this.getAllByObyekt9Raw({ obyektId: obyektId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByObyekt9 = (() => {
+        const key = (requestParameters: GetAllByObyekt9Request, config?: SWRConfiguration<Array<CabelTypeDTO>>) => this.getAllByObyekt9RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByObyekt9Fetch(context));
+        const fn = (requestParameters: GetAllByObyekt9Request, config?: SWRConfiguration<Array<CabelTypeDTO>>): SWRResponse<Array<CabelTypeDTO>> => {
+            return useSWR<Array<CabelTypeDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllCabelTypesRequestOpts = (requestParameters: GetAllCabelTypesRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +258,14 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/cabel-types`,
             method: 'GET',
@@ -215,6 +320,14 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/cabel-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/cabel-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class CabelTypeResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/cabel-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

@@ -29,6 +29,13 @@ export interface DeleteTerminalServerRequest {
     id: number;
 }
 
+export interface GetAllByObyekt1Request {
+    obyektId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAllTerminalServersRequest {
     page?: number;
     size?: number;
@@ -67,6 +74,14 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/terminal-servers`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/terminal-servers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +167,80 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByObyekt1RequestOpts = (requestParameters: GetAllByObyekt1Request): runtime.RequestOpts => {
+        if (requestParameters.obyektId === null || requestParameters.obyektId === undefined) {
+            throw new runtime.RequiredError('obyektId','Required parameter requestParameters.obyektId was null or undefined when calling getAllByObyekt1.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/terminal-servers/obyekt/{obyektId}`.replace(`{${"obyektId"}}`, encodeURIComponent(String(requestParameters.obyektId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByObyekt1Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TerminalServerDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TerminalServerDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByObyekt1Raw = async (requestParameters: GetAllByObyekt1Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TerminalServerDTO>>> => {
+        const context = this.getAllByObyekt1RequestOpts(requestParameters);
+        return this.getAllByObyekt1Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByObyekt1 = async (obyektId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<TerminalServerDTO>> => {
+        const response = await this.getAllByObyekt1Raw({ obyektId: obyektId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByObyekt1 = (() => {
+        const key = (requestParameters: GetAllByObyekt1Request, config?: SWRConfiguration<Array<TerminalServerDTO>>) => this.getAllByObyekt1RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByObyekt1Fetch(context));
+        const fn = (requestParameters: GetAllByObyekt1Request, config?: SWRConfiguration<Array<TerminalServerDTO>>): SWRResponse<Array<TerminalServerDTO>> => {
+            return useSWR<Array<TerminalServerDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllTerminalServersRequestOpts = (requestParameters: GetAllTerminalServersRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +258,14 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/terminal-servers`,
             method: 'GET',
@@ -215,6 +320,14 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/terminal-servers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/terminal-servers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class TerminalServerResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/terminal-servers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

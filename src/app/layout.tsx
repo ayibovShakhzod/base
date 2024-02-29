@@ -19,10 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* // eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="https://api-maps.yandex.ru/3.0/?apikey=2eade8f8-2772-41de-a815-93eb1ff3de9f&lang=ru_RU" />
       </head>
-      <body className={inter.className}>
-        {children}
-        <YandexMap />
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

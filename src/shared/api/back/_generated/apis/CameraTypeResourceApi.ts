@@ -29,6 +29,13 @@ export interface DeleteCameraTypeRequest {
     id: number;
 }
 
+export interface GetAllByObyekt8Request {
+    obyektId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAllCameraTypesRequest {
     page?: number;
     size?: number;
@@ -67,6 +74,14 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/camera-types`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/camera-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +167,80 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByObyekt8RequestOpts = (requestParameters: GetAllByObyekt8Request): runtime.RequestOpts => {
+        if (requestParameters.obyektId === null || requestParameters.obyektId === undefined) {
+            throw new runtime.RequiredError('obyektId','Required parameter requestParameters.obyektId was null or undefined when calling getAllByObyekt8.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/camera-types/obyekt/{obyektId}`.replace(`{${"obyektId"}}`, encodeURIComponent(String(requestParameters.obyektId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByObyekt8Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CameraTypeDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CameraTypeDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByObyekt8Raw = async (requestParameters: GetAllByObyekt8Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CameraTypeDTO>>> => {
+        const context = this.getAllByObyekt8RequestOpts(requestParameters);
+        return this.getAllByObyekt8Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByObyekt8 = async (obyektId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<CameraTypeDTO>> => {
+        const response = await this.getAllByObyekt8Raw({ obyektId: obyektId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByObyekt8 = (() => {
+        const key = (requestParameters: GetAllByObyekt8Request, config?: SWRConfiguration<Array<CameraTypeDTO>>) => this.getAllByObyekt8RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByObyekt8Fetch(context));
+        const fn = (requestParameters: GetAllByObyekt8Request, config?: SWRConfiguration<Array<CameraTypeDTO>>): SWRResponse<Array<CameraTypeDTO>> => {
+            return useSWR<Array<CameraTypeDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllCameraTypesRequestOpts = (requestParameters: GetAllCameraTypesRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +258,14 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/camera-types`,
             method: 'GET',
@@ -215,6 +320,14 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/camera-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/camera-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class CameraTypeResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/camera-types/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

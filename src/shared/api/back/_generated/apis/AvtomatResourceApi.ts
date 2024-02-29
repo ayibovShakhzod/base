@@ -35,6 +35,13 @@ export interface GetAllAvtomatsRequest {
     sort?: Array<string>;
 }
 
+export interface GetAllByObyekt10Request {
+    obyektId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAvtomatRequest {
     id: number;
 }
@@ -67,6 +74,14 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/avtomats`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/avtomats/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -161,6 +184,14 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/avtomats`,
             method: 'GET',
@@ -206,6 +237,80 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByObyekt10RequestOpts = (requestParameters: GetAllByObyekt10Request): runtime.RequestOpts => {
+        if (requestParameters.obyektId === null || requestParameters.obyektId === undefined) {
+            throw new runtime.RequiredError('obyektId','Required parameter requestParameters.obyektId was null or undefined when calling getAllByObyekt10.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/avtomats/obyekt/{obyektId}`.replace(`{${"obyektId"}}`, encodeURIComponent(String(requestParameters.obyektId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByObyekt10Fetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AvtomatDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AvtomatDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByObyekt10Raw = async (requestParameters: GetAllByObyekt10Request, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AvtomatDTO>>> => {
+        const context = this.getAllByObyekt10RequestOpts(requestParameters);
+        return this.getAllByObyekt10Fetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByObyekt10 = async (obyektId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<AvtomatDTO>> => {
+        const response = await this.getAllByObyekt10Raw({ obyektId: obyektId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByObyekt10 = (() => {
+        const key = (requestParameters: GetAllByObyekt10Request, config?: SWRConfiguration<Array<AvtomatDTO>>) => this.getAllByObyekt10RequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByObyekt10Fetch(context));
+        const fn = (requestParameters: GetAllByObyekt10Request, config?: SWRConfiguration<Array<AvtomatDTO>>): SWRResponse<Array<AvtomatDTO>> => {
+            return useSWR<Array<AvtomatDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAvtomatRequestOpts = (requestParameters: GetAvtomatRequest): runtime.RequestOpts => {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getAvtomat.');
@@ -215,6 +320,14 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/avtomats/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/avtomats/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class AvtomatResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/avtomats/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

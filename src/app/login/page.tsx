@@ -43,7 +43,6 @@ const LoginPage = () => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setApiKey("token")
     await api.auth.authorize({
       username: values.username,
       password: values.password,

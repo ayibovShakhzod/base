@@ -12,7 +12,7 @@ export interface IPageHeader {
 
 export const PageHeader = (props: IPageHeader) => {
   return (
-    <header className="w-lvw px-6 pb-1 flex items-center justify-between my-4">
+    <header className="w-lvw px-6 pb-1 pt-4 flex items-center justify-between mb-4">
       <div className="flex">
         <Link
           href="/"

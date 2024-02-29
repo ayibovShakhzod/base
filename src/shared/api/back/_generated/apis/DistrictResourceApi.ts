@@ -29,6 +29,13 @@ export interface DeleteDistrictRequest {
     id: number;
 }
 
+export interface GetAllByRegionRequest {
+    regionId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetAllDistrictsRequest {
     page?: number;
     size?: number;
@@ -67,6 +74,14 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/districts`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/districts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -144,6 +167,80 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByRegionRequestOpts = (requestParameters: GetAllByRegionRequest): runtime.RequestOpts => {
+        if (requestParameters.regionId === null || requestParameters.regionId === undefined) {
+            throw new runtime.RequiredError('regionId','Required parameter requestParameters.regionId was null or undefined when calling getAllByRegion.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/districts/region/{regionId}`.replace(`{${"regionId"}}`, encodeURIComponent(String(requestParameters.regionId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByRegionFetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<DistrictDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DistrictDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByRegionRaw = async (requestParameters: GetAllByRegionRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<DistrictDTO>>> => {
+        const context = this.getAllByRegionRequestOpts(requestParameters);
+        return this.getAllByRegionFetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByRegion = async (regionId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<DistrictDTO>> => {
+        const response = await this.getAllByRegionRaw({ regionId: regionId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByRegion = (() => {
+        const key = (requestParameters: GetAllByRegionRequest, config?: SWRConfiguration<Array<DistrictDTO>>) => this.getAllByRegionRequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByRegionFetch(context));
+        const fn = (requestParameters: GetAllByRegionRequest, config?: SWRConfiguration<Array<DistrictDTO>>): SWRResponse<Array<DistrictDTO>> => {
+            return useSWR<Array<DistrictDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getAllDistrictsRequestOpts = (requestParameters: GetAllDistrictsRequest): runtime.RequestOpts => {
         const queryParameters: any = {};
 
@@ -161,6 +258,14 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/districts`,
             method: 'GET',
@@ -215,6 +320,14 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/districts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/districts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class DistrictResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/districts/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',

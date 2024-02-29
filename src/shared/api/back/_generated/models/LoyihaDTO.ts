@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    ObjectTasnifiDTO,
-    ObjectTasnifiDTOFromJSON,
-    ObjectTasnifiDTOFromJSONTyped,
-    ObjectTasnifiDTOToJSON,
-} from './ObjectTasnifiDTO';
-
 /**
  * 
  * @export
@@ -38,12 +31,6 @@ export interface LoyihaDTO {
      * @memberof LoyihaDTO
      */
     name: string;
-    /**
-     * 
-     * @type {ObjectTasnifiDTO}
-     * @memberof LoyihaDTO
-     */
-    objectTasnifi?: ObjectTasnifiDTO;
 }
 
 
@@ -59,7 +46,6 @@ export function LoyihaDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': json['name'],
-        'objectTasnifi': !exists(json, 'objectTasnifi') ? undefined : ObjectTasnifiDTOFromJSON(json['objectTasnifi']),
     };
 }
 
@@ -74,7 +60,6 @@ export function LoyihaDTOToJSON(value?: LoyihaDTO | null): any {
         
         'id': value.id,
         'name': value.name,
-        'objectTasnifi': ObjectTasnifiDTOToJSON(value.objectTasnifi),
     };
 }
 

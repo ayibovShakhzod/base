@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { IObyekt } from "modules/objects/table"
+import { IObyekt } from "modules/obyekts/table"
+
 import { useForm } from "react-hook-form"
+import { ObyektDTO } from "shared/api"
 import {
   Button,
   Dialog,
@@ -45,7 +47,7 @@ export const AddEditModal = ({ obyekt, onClose, open }: IAddEditModal) => {
     values: {
       name: obyekt?.name || "",
       address: obyekt?.address || "",
-      type: obyekt?.type || "",
+      type: obyekt?.id || "",
       lat: Number(obyekt?.lat) || 0,
       long: Number(obyekt?.long) || 0,
     },

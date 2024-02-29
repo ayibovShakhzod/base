@@ -1,4 +1,4 @@
-import { IObyekt } from "modules/objects/table"
+import { IObyekt } from "modules/obyekts/table"
 import {
   Button,
   Dialog,

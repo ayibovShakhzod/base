@@ -35,6 +35,13 @@ export interface GetAllBuyurtmaRaqamsRequest {
     sort?: Array<string>;
 }
 
+export interface GetAllByLoyihaRequest {
+    loyihaId: number;
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+}
+
 export interface GetBuyurtmaRaqamRequest {
     id: number;
 }
@@ -67,6 +74,14 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/buyurtma-raqams`,
             method: 'POST',
@@ -111,6 +126,14 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/buyurtma-raqams/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
@@ -161,6 +184,14 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/buyurtma-raqams`,
             method: 'GET',
@@ -206,6 +237,80 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
     /**
      */
+    protected getAllByLoyihaRequestOpts = (requestParameters: GetAllByLoyihaRequest): runtime.RequestOpts => {
+        if (requestParameters.loyihaId === null || requestParameters.loyihaId === undefined) {
+            throw new runtime.RequiredError('loyihaId','Required parameter requestParameters.loyihaId was null or undefined when calling getAllByLoyiha.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.size !== undefined) {
+            queryParameters['size'] = requestParameters.size;
+        }
+
+        if (requestParameters.sort) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        return {
+            path: `/api/buyurtma-raqams/loyiha/{loyihaId}`.replace(`{${"loyihaId"}}`, encodeURIComponent(String(requestParameters.loyihaId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    protected getAllByLoyihaFetch = async (context: runtime.RequestOpts, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BuyurtmaRaqamDTO>>> => {
+        const response = await this.request(context, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BuyurtmaRaqamDTOFromJSON));
+    }
+
+    /**
+     */
+    protected getAllByLoyihaRaw = async (requestParameters: GetAllByLoyihaRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BuyurtmaRaqamDTO>>> => {
+        const context = this.getAllByLoyihaRequestOpts(requestParameters);
+        return this.getAllByLoyihaFetch(context, initOverrides);
+    }
+
+    /**
+     */
+    getAllByLoyiha = async (loyihaId: number, page?: number, size?: number, sort?: Array<string>, initOverrides?: RequestInit): Promise<Array<BuyurtmaRaqamDTO>> => {
+        const response = await this.getAllByLoyihaRaw({ loyihaId: loyihaId, page: page, size: size, sort: sort }, initOverrides);
+        return await response.value();
+    }
+
+
+    /**
+     */
+    useGetAllByLoyiha = (() => {
+        const key = (requestParameters: GetAllByLoyihaRequest, config?: SWRConfiguration<Array<BuyurtmaRaqamDTO>>) => this.getAllByLoyihaRequestOpts(requestParameters);
+        const fetcher = (context: runtime.RequestOpts) => this.swrFetch(this.getAllByLoyihaFetch(context));
+        const fn = (requestParameters: GetAllByLoyihaRequest, config?: SWRConfiguration<Array<BuyurtmaRaqamDTO>>): SWRResponse<Array<BuyurtmaRaqamDTO>> => {
+            return useSWR<Array<BuyurtmaRaqamDTO>>(() => key(requestParameters), fetcher, config);
+        }
+        fn.key = key
+        return fn
+    })()
+
+    /**
+     */
     protected getBuyurtmaRaqamRequestOpts = (requestParameters: GetBuyurtmaRaqamRequest): runtime.RequestOpts => {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getBuyurtmaRaqam.');
@@ -215,6 +320,14 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/buyurtma-raqams/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
@@ -275,6 +388,14 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/buyurtma-raqams/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
@@ -325,6 +446,14 @@ export class BuyurtmaRaqamResourceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         return {
             path: `/api/buyurtma-raqams/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',
