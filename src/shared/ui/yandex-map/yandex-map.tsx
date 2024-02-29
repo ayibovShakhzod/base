@@ -29,28 +29,28 @@ import * as ReactDOM from "react-dom"
 
 export const YandexMap = () => {
   // @ts-ignore
-  const ymaps3: YMap = window.ymaps3
+  // const ymaps3: YMap = window.ymaps3
 
-  const [ymaps3Reactify, setYmaps3Reactify] = useState<any>(null)
+  // const [ymaps3Reactify, setYmaps3Reactify] = useState<any>(null)
 
-  const getYmaps3Reactify = async () => await ymaps3?.import("@yandex/ymaps3-reactify")
+  // const getYmaps3Reactify = async () => await ymaps3?.import("@yandex/ymaps3-reactify")
 
-  useEffect(() => {
-    getYmaps3Reactify().then((ymaps3Reactify) => {
-      setYmaps3Reactify(ymaps3Reactify)
-    })
-  }, [ymaps3])
+  // useEffect(() => {
+  //   getYmaps3Reactify().then((ymaps3Reactify) => {
+  //     setYmaps3Reactify(ymaps3Reactify)
+  //   })
+  // }, [ymaps3])
 
-  if (!ymaps3Reactify) return null
+  // if (!ymaps3Reactify) return null
 
-  const reactify = ymaps3Reactify?.reactify?.bindTo(React, ReactDOM)
-  console.log("🚀 ~ YandexMap ~ reactify:", reactify)
-  const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = reactify?.module(ymaps3)
+  // const reactify = ymaps3Reactify?.reactify?.bindTo(React, ReactDOM)
+  // console.log("🚀 ~ YandexMap ~ reactify:", reactify)
+  // const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = reactify?.module(ymaps3)
 
   return (
     <div>
       dasdas
-      <YMap />
+      {/* <YMap /> */}
     </div>
   )
 }
